@@ -1,0 +1,23 @@
+import java.util.Scanner;
+
+class Main {
+  public static void main(String[] args) {
+    Scanner leitor = new Scanner(System.in);
+    System.out.print("digite o lado do quadrado:");
+    double lquadrado = leitor.nextFloat();
+    double areaQuad = Math.pow(lquadrado,2);
+    System.out.print("digite o raio do circulo:");
+    double raioC = leitor.nextDouble();
+    double areaCirculo = raioC * 3.14;
+    if (areaQuad > areaCirculo){
+      System.out.println("area maior é a do quadrado:" + areaQuad);
+    }
+    else {
+      System.out.println("area maior é a do circulo:" + areaCirculo);
+    }
+  }
+}
+
+
+
+uma das coisas que mais trouce um certo significado ou me fez olhar de uma forma diferente, foi aprender um poco mais sobre pesquisa cientifica, um assunto que nos tras e transmite informações e conhecimento mais aprofundado e com mais qualidade e confiança em relação a fonte, embora seja um modo de pesquisa mais detalhado e trabalhoso, o resutado do trabalho final é muito mais gratificante e significativo, mudando formas de pensar e estudar e estimulando a procurar conhecer sempre mais em busca de evolução.
