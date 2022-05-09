@@ -1,0 +1,30 @@
+import java.util.Scanner;
+
+class Main {
+  public static void main(String[] args) {
+    Scanner leitor = new Scanner(System.in);
+    System.out.println("sexo M ou F:");
+    char sexo = leitor.next().charAt(0);
+    System.out.println("altura:");
+    float altura = leitor.nextFloat();
+    float r = pesoideal(sexo);
+
+
+
+
+
+
+
+
+    }
+  public static double pesoideal (char sexo, float altura){
+    if (sexo == 'M' || sexo == 'm'){
+    double  resutado = (72.2 * altura) - 58.0;
+    }
+    else if (sexo == 'f' || sexo =='F'){
+    double  resutado = (62.1 * altura) - 44.7;
+    double pesoideal = resutado;
+    }
+  }
+  return (float) pesoideal;
+}
