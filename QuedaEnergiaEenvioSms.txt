@@ -1,0 +1,79 @@
+#include <LiquidCrystal.h>
+// initialize pins
+LiquidCrystal lcd(7, 6, 5, 4, 3, 2);
+
+String ssid     = "Simulator Wifi";  // SSID to connect to
+String password = ""; // Our virtual wifi has no password 
+String host     = "api.thingspeak.com"; // Open Weather Map API
+const int httpPort   = 80;
+//essa chave foi criada pelo grupo
+String uri     = "/update?api_key=4NOL0I0F4LPAY6ON&field1=";
+
+int sensorValue = 0;
+int setupESP8266(void) {
+  // Start our ESP8266 Serial Communication
+  Serial.begin(115200);   // Serial connection over USB to computer
+  Serial.println("AT");   // Serial connection on Tx / Rx port to ESP8266
+  delay(10);        // Wait a little for the ESP to respond
+  if (!Serial.find("OK")) return 1;
+    
+  // Connect to 123D Circuits Simulator Wifi
+  Serial.println("AT+CWJAP=\"" + ssid + "\",\"" + password + "\"");
+  delay(10);        // Wait a little for the ESP to respond
+  if (!Serial.find("OK")) return 2;
+  
+  // Open TCP connection to the host:
+  Serial.println("AT+CIPSTART=\"TCP\",\"" + host + "\"," + httpPort);
+  delay(50);        // Wait a little for the ESP to respond
+  if (!Serial.find("OK")) return 3;
+  
+  return 0;
+}
+
+void anydata(int intensity) {    
+  // Construct our HTTP call
+  String httpPacket = "GET " + uri + String(intensity) + " HTTP/1.1\r\nHost: " + host + "\r\n\r\n";
+  int length = httpPacket.length();
+  
+  // Send our message length
+  Serial.print("AT+CIPSEND=");
+  Serial.println(length);
+  delay(10); // Wait a little for the ESP to respond if (!Serial.find(">")) return -1;
+
+  // Send our http request
+  Serial.print(httpPacket);
+  delay(10); // Wait a little for the ESP to respond
+  if (!Serial.find("SEND OK\r\n")) return;  
+}
+
+void setup() {
+  
+  // initialize the digital pin as an output.
+  pinMode(10, OUTPUT);
+}
+// the loop routine runs over and over again forever:
+void loop() {
+  // set up the LCD's number of columns and rows:
+	lcd.begin(16, 2);
+  delay(0);
+  lcd.print("Sem energia ");
+  pinMode(A0,INPUT);
+  setupESP8266();
+  //sensorValue = Serial.read("What is the initial meter reading?");
+  
+  lcd.setCursor(0,1);
+  sensorValue = analogRead(A0)* -8; //valor padrao 230 //instaneous_power
+  Serial.println(sensorValue);
+  int intensity = map(sensorValue,0,1023,0,255);
+  anydata(intensity);
+  lcd.print(intensity);
+  delay(7000);
+ 
+  
+  //scroll left
+  for (int positionCounter = 0; positionCounter<16; positionCounter++) 
+  {
+    lcd.scrollDisplayLeft();
+    delay(150);
+  }
+}
