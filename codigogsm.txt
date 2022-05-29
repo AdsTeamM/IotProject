@@ -1,0 +1,100 @@
+#include <SoftwareSerial.h>
+#include <Crescer.h>
+#include <Wire.h> 
+#include <LiquidCrystal_I2C.h>
+
+
+
+Tempora temp1;
+
+
+SoftwareSerial gsm(2, 3); // RX, TX
+
+String avalia = "";
+int conta = 0;
+
+
+void setup() {
+  // Open serial communications and wait for port to open:
+  Serial.begin(9600);
+  gsm.begin(9600);
+ temp1.defiSP(500);
+ 
+
+  delay(6000);
+
+  Serial.println("Rodando");
+
+  comando ("AT");
+  comando ("AT+CMGF=1");
+  comando ("ATE0");
+  delay(1500);
+  comando ("AT+CNMI=1,2,0,0,0");
+
+
+  pinMode(4, INPUT_PULLUP);
+  pinMode(11, OUTPUT);
+  pinMode(12, OUTPUT);
+  digitalWrite(11, 1);
+  digitalWrite(12, 1);
+}
+
+  
+  
+  int entrada = digitalRead(4);
+  if (entrada == 0 or comp == "Le")
+  {
+
+    comando ("AT+CMGF=1");
+    comando ("ATE0");
+    comando ("AT+CNMI=1,2,0,0,0");
+
+    gsm.print("AT+CMGS=");
+    gsm.write(0x22);//aspa dupla
+    gsm.print("+555198240925");
+    gsm.write(0x22);//aspa dupla
+    gsm.println();
+
+    delay(1000);
+    gsm.print("Valor da entrada A0: ");
+
+    // delay(4000);
+    gsm.println(teste);
+    Serial.println(teste);
+
+    //   delay(5000);
+
+    gsm.write(0x1A);
+    gsm.write(0x0D);
+    gsm.write(0x0A);
+    Serial.println("fim1");
+    //   delay(4000);
+    Serial.println("fim2");
+  }
+
+  //  Serial.print (entrada);
+  //   Serial.print (" - ");
+  //    Serial.println (teste);
+
+}
+
+
+// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx funcao
+
+void comando(String comand)
+{
+conta++;
+avalia = "";
+gsm.println(comand);
+while(gsm.available()<=0) Serial.print("preso passo "), Serial.println(conta), delay(200);
+
+while(gsm.available()>0)
+{
+  char letra = gsm.read();
+  if (isAlphaNumeric(letra)) avalia += letra;
+}
+
+if (avalia=="OK") Serial.print("passo"), Serial.println(conta);
+else Serial.print("avalia: "), Serial.println(avalia);
+delay(200); 
+}
